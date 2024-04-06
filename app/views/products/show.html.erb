@@ -46,7 +46,7 @@
                 <div class="flex mb-4">
                     <div class="mr-4">
                         <span class="font-bold text-gray-700 dark:text-gray-300">Price:</span>
-                        <span class="text-gray-600 dark:text-gray-300"><%= @product.price %></span>
+                        <span class="text-gray-600 dark:text-gray-300"> &#x20B9;<%= @product.price %></span>
                     </div>
             
                 </div>
@@ -56,6 +56,20 @@
                     <p class="text-gray-600 dark:text-gray-300 text-sm mt-2">
                       <%= @product.description %>
                     </p>
+                </div>
+                <div class="flex -mx-2 mb-4 mt-5">
+                    <div class="w-1/2 px-2">
+                      
+                      <% if current_user  %>
+                        <%= button_to "Buy Now", line_item_buy_now_path(@product), data: {turbo: false} , class:"w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700 transition:ease-in duration-300"%>
+                      
+                      <% end %>
+                    </div>
+                    <div class="w-1/2 px-2" id="add_to_cart_<%= current_user&.id %>">
+                    <% if current_user  %>
+                      <%= render "products/add_to_cart_form", product: @product %>
+                    <% end %>
+                    </div>
                 </div>
             </div>
         </div>
