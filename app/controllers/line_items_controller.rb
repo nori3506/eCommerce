@@ -16,6 +16,10 @@ class LineItemsController < ApplicationController
     redirect_to product_path(@selected_product)
   end
 
+  def add_product_from_index
+    check_and_add_to_cart
+  end
+
   def destroy_from_cart
     @selected_product = Product.find(params[:product_id])
     @line_item = @current_cart.line_items.find_by(product_id: @selected_product)
