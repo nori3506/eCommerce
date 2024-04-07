@@ -20,6 +20,21 @@ class LineItemsController < ApplicationController
     check_and_add_to_cart
   end
 
+  def add_to_cart_from_index
+    check_and_add_to_cart
+    @line_item.quantity += params[:quantity].to_i
+    @line_item.save
+    respond_to do |format|
+      format.turbo_stream{
+        render turbo_stream:
+        turbo_stream.update(
+          "product_#{@selected_product.id}_user_#{current_user.id}",
+          partial: "form_for_add_to_cart"
+        )
+      }
+    end
+  end
+
   def destroy_from_cart
     @selected_product = Product.find(params[:product_id])
     @line_item = @current_cart.line_items.find_by(product_id: @selected_product)
