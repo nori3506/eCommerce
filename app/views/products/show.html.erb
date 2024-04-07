@@ -1,3 +1,5 @@
+<p style="color: green"><%= notice %></p>
+
 <div class="dark:bg-gray-800 py-8">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row -mx-4">
@@ -8,12 +10,11 @@
                       <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
                           <% @product.images.each_with_index do |image, index| %>
                           <!-- Item 1 -->
-                            <div class="<%= index.zero? ? "active" : "hidden" %>" data-carousel-item="<%= index %>">
+                            <div class="<%= index.zero? ? "duration-700 ease-in-out" : "hidden" %>" data-carousel-item="<%= index.zero? ? "active" : "" %>">
                               <%= image_tag image, class:"absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" %>
                             </div>
                           <% end %>
                       </div>
-
                       <!-- Slider indicators -->
                       <div class="absolute z-30 flex -translate-x-1/2 space-x-3 rtl:space-x-reverse bottom-5 left-1/2">
                         <% @product.images.each_with_index do |_, index| %>
@@ -59,16 +60,14 @@
                 </div>
                 <div class="flex -mx-2 mb-4 mt-5">
                     <div class="w-1/2 px-2">
-                      
-                      <% if current_user  %>
-                        <%= button_to "Buy Now", line_item_buy_now_path(@product), data: {turbo: false} , class:"w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700 transition:ease-in duration-300"%>
-                      
-                      <% end %>
+                        <%= button_to "Buy Now", line_item_buy_now_path(@product), class:"w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700 transition:ease-in duration-300"%>
                     </div>
-                    <div class="w-1/2 px-2" id="add_to_cart_<%= current_user&.id %>">
-                    <% if current_user  %>
-                      <%= render "products/add_to_cart_form", product: @product %>
-                    <% end %>
+                    <div class="w-1/2 px-2">
+                      <%= form_with(url: line_item_add_to_cart_path(@product), method: :post) do |form| %>
+                        <%= form.number_field :quantity %>
+                        <%= form.submit "Add", class:"bg-gray-200 p-2 hover:cursor-pointer hover:bg-gray-300 transition:ease-in duration-300" %>
+                      <% end %>
+                      
                     </div>
                 </div>
             </div>
@@ -76,13 +75,9 @@
     </div>
 </div>
 
-<div class="grid place-items-start p-10">
-  <div class="grid grid-cols-3 gap-4">
+<div>
+  <%= link_to "Edit this product", edit_product_path(@product) %> |
+  <%= link_to "Back to products", products_path %>
 
-    <%= link_to "Back to products", products_path, class:"bg-gray-100 p-2 text-black hover:bg-gray-200" %>
-    <% if current_user.try(:type) %>
-      <%= link_to "Edit this product", edit_product_path(@product), class:"bg-green-400 p-2 text-white hover:bg-green-700" %> 
-      <%= button_to "Destroy this product", @product, method: :delete, class:"bg-red-400 p-2 text-white hover:bg-red-700" %>
-    <% end %>
-  </div>
+  <%= button_to "Destroy this product", @product, method: :delete %>
 </div>
