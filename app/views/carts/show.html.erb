@@ -6,7 +6,7 @@
           <div class="flow-root">
             <ul class="-my-8">
             <% @current_cart.line_items.each do |line_item| %>
-              <li class="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
+              <li id="line_item_<%=line_item.id %>" class="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0">
                 <div class="shrink-0">
                   <%= image_tag line_item.product.images[0], class:"h-24 w-24 max-w-full rounded-lg object-cover" %>
                 </div>
@@ -47,7 +47,6 @@
                   </div>
                 </div>
               </li>
-        
             <% end %>
             </ul>
           </div>
@@ -55,10 +54,13 @@
           <div class="mt-6 border-t border-b py-2">
             <div class="flex items-center justify-between">
               <p class="text-sm text-gray-400">Subtotal</p>
-              <p class="text-lg font-semibold text-gray-900">&#x20B9;<%= @cart.sub_total %></p>
+              <p class="text-lg font-semibold text-gray-900">
+                <%= turbo_frame_tag "Cart_#{@current_cart.id}" do %>
+                  <%= render  "sub_total", cart: @current_cart %>
+                <% end %>
+              </p>
             </div>
           </div>
-
 
           <div class="mt-6 text-center">
             <button type="button" class="group inline-flex w-full items-center justify-center rounded-md bg-gray-900 px-6 py-4 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
